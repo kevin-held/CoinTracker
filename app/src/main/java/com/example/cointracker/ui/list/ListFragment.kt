@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -22,6 +21,10 @@ import com.example.cointracker.model.Asset
 
 private lateinit var coinViewModel: CoinViewModel
 
+/*
+Fragment containing the AssetList
+displays search bar and recycler view
+ */
 class ListFragment : Fragment() {
 
     private var _binding: FragmentListBinding? = null
@@ -37,6 +40,7 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        // create the dao and viewmodel
         val application = requireActivity().application
         val dao = CoinDatabase.getInstance(application).coinDao
         val viewModelFactory = CoinViewModelFactory(dao)
@@ -44,15 +48,20 @@ class ListFragment : Fragment() {
 
         _binding = FragmentListBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        // create the recycler view
         val recyclerView = binding.listRecyclerView
         val adapter = AssetAdapter(coinViewModel.coinListLiveData.value ?: emptyList<CoinEntity>())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
+        // observe the coinList to keep recycler view up to date
         coinViewModel.coinListLiveData.observe(viewLifecycleOwner, Observer {
             adapter.updateAssetList(it.sortedBy { coin -> coin.name })
         })
 
+        // search button
+        // currently searching by coin name, could include search by symbol as well
         binding.imageButton.setOnClickListener {
             val searchTerm = binding.search.text.toString().lowercase()
             val newCoinList = coinViewModel.coinListLiveData.value?.filter {
@@ -70,13 +79,12 @@ class ListFragment : Fragment() {
         _binding = null
     }
 
+    // adapter for recycler view
     class AssetAdapter(var assetList: List<CoinEntity>): RecyclerView.Adapter<AssetAdapter.ViewHolder>(){
         inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
             val symbol = itemView.findViewById<TextView>(R.id.symbol)
             val name = itemView.findViewById<TextView>(R.id.name)
             val track = itemView.findViewById<ImageButton>(R.id.trackButton)
-            //val rank = itemView.findViewById<TextView>(R.id.rank)
-            //val price = itemView.findViewById<TextView>(R.id.price)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -88,23 +96,24 @@ class ListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val entity: CoinEntity = assetList.get(position)
+            // set the text for asset item
             holder.symbol.setText(entity.symbol)
             holder.name.setText(entity.name)
+
+            // logic for track button (starred)
             holder.track.isPressed = entity.tracked
             holder.track.setOnClickListener {
-                //Log.d("TRACK BUTTON", "CLICKED")
                 if (!entity.tracked) {
-                    //holder.track.text = "UNTRACk"
+                    // add coin to tracked list
                     entity.tracked = true
                     val asset = Asset(id = entity.assetId, name = entity.name, symbol = entity.symbol)
                     coinViewModel.trackCoin(asset, entity.name)
                 } else {
-                    //holder.track.text = "TRACK"
+                    // remove from tracked list
                     entity.tracked = false
                     coinViewModel.untrackCoin(entity.name)
                 }
                 holder.track.isPressed = entity.tracked
-
             }
         }
 

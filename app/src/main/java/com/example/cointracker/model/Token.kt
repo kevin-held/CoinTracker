@@ -1,5 +1,8 @@
 package com.example.cointracker.model
 
+/*
+Class representing JSON response for getToken()
+ */
 data class Token(
     val access_token: String,
     val scope: String,

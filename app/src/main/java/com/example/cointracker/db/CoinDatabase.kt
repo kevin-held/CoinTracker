@@ -5,7 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-
+/*
+Coin Database Singleton Object
+ */
 @Database(entities = [CoinEntity::class], version = 1, exportSchema = false)
 abstract class CoinDatabase: RoomDatabase() {
     abstract val coinDao: CoinDao

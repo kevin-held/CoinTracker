@@ -1,5 +1,8 @@
 package com.example.cointracker.model
 
+/*
+Class representing JSON response for getCoin()
+ */
 data class Coin (
     val id: String,
     val assetId: String,

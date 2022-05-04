@@ -12,13 +12,12 @@ import kotlinx.coroutines.launch
 
 class CoinViewModel(val dao: CoinDao): ViewModel() {
 
-    var token: LiveData<String>
-    var assetListLiveData: LiveData<AssetList>
-    var coinListLiveData: LiveData<List<CoinEntity>>
-    var trackedListLiveData: LiveData<List<CoinEntity>>
+    var token: LiveData<String> // bearer token required for getCoin()
+    var assetListLiveData: LiveData<AssetList> // list of all coins only asset data (assetId, name, symbol)
+    var coinListLiveData: LiveData<List<CoinEntity>> // list of all coins Tracked or Untracked (can have detailed info)
+    var trackedListLiveData: LiveData<List<CoinEntity>> // list of all Tracked coins (must have detailed info)
 
-    private val coinFetcher: CoinFetcher = CoinFetcher()
-    //private var initCoins = false
+    private val coinFetcher: CoinFetcher = CoinFetcher() // for making api calls
 
     init {
         token = coinFetcher.getToken()
@@ -27,6 +26,10 @@ class CoinViewModel(val dao: CoinDao): ViewModel() {
         trackedListLiveData = dao.getTrackedCoins()
     }
 
+    /*
+    add coin to tracked list
+    get detailed info
+     */
     fun trackCoin(asset: Asset, name: String){
         viewModelScope.launch {
             dao.trackCoin(name)
@@ -35,34 +38,19 @@ class CoinViewModel(val dao: CoinDao): ViewModel() {
 
     }
 
+    /*
+    remove from tracked list
+     */
     fun untrackCoin(name: String){
         viewModelScope.launch {
             dao.untrackCoin(name)
         }
     }
 
-    fun getToken(){
-        token = coinFetcher.getToken()
-    }
-
-    fun getAssets(){
-        assetListLiveData = coinFetcher.getAssetList{ loadAssets() }
-    }
-
     /*
-    fun getCoins(test: String){
-        Log.d("CoinViewModel", "get Coins called ${token.value}")
-        if (token.value != null && token.value != "" && initCoins != true) {
-            initCoins = true
-            assetListLiveData.value?.content?.forEach{
-                coinFetcher.getCoin(it.id, token.value!!) {
-                    loadCoin(it)
-                }
-            }
-        }
-    }*/
-
-    fun getCoin(asset: Asset) {
+    get detailed info for a coin
+     */
+    private fun getCoin(asset: Asset) {
         if (token.value != null && token.value != ""){
             coinFetcher.getCoin(asset, token.value!!) {
                 loadCoin(it)
@@ -71,6 +59,9 @@ class CoinViewModel(val dao: CoinDao): ViewModel() {
     }
 
 
+    /*
+    add a coin to the database
+     */
     private fun loadCoin(coinEntity: CoinEntity){
         viewModelScope.launch {
             dao.insertReplace(coinEntity)
@@ -78,6 +69,9 @@ class CoinViewModel(val dao: CoinDao): ViewModel() {
     }
 
 
+    /*
+    add all assets to the database
+     */
     private fun loadAssets(){
         viewModelScope.launch {
             assetListLiveData.value?.content?.forEach {

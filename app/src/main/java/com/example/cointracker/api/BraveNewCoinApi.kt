@@ -6,6 +6,9 @@ import retrofit2.http.*
 
 interface BraveNewCoinApi {
 
+    /*
+    Get List of Coins with info such as ASSET ID, NAME, SYMBOL
+     */
     @Headers(
         "X-RapidAPI-Host: bravenewcoin.p.rapidapi.com",
     )
@@ -13,6 +16,9 @@ interface BraveNewCoinApi {
     fun getAssetList(@Header("X-RapidAPI-Key") key: String): Call<AssetList>
 
 
+    /*
+    Post clientID to get Bearer token for authorization string used in getCoin
+     */
     @Headers(
         "content-type: application/json",
         "X-RapidAPI-Host: bravenewcoin.p.rapidapi.com"
@@ -22,6 +28,9 @@ interface BraveNewCoinApi {
                  @Body requestBody: RequestBody): Call<Token>
 
 
+    /*
+    Get detailed information on a single coin
+     */
     @Headers(
         "X-RapidAPI-Host: bravenewcoin.p.rapidapi.com",
     )
@@ -29,7 +38,5 @@ interface BraveNewCoinApi {
     fun getCoin(@Header("X-RapidAPI-Key") key: String,
                 @Header("Authorization") authorization: String,
                 @Query("assetId") assetId: String): Call<CoinList>
-
-
 
 }

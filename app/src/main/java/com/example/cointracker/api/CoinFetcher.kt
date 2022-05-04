@@ -14,6 +14,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private const val TAG = "Coin Fetcher"
 
+/*
+Class containing retrofit calls to get data from API
+ */
 class CoinFetcher {
 
     private val braveNewCoinApi: BraveNewCoinApi
@@ -29,17 +32,16 @@ class CoinFetcher {
         credentials = Credentials()
     }
 
+    /*
+    Get authorization token required for getCoin()
+     */
     fun getToken(): LiveData<String> {
-        var responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val request: Call<Token> = braveNewCoinApi.getToken(key = credentials.apiKey, requestBody = RequestBody())
-        //val response = request.execute()
-        //val token: Token? = response.body()
-        //credentials.bearer = "Bearer " + token?.access_token
+        val responseLiveData: MutableLiveData<String> = MutableLiveData()
+        val request: Call<Token> = braveNewCoinApi.getToken(key = credentials.apiKey, requestBody = RequestBody(client_id = credentials.clientId))
         request.enqueue(object: Callback<Token> {
             override fun onResponse(call: Call<Token>, response: Response<Token>) {
                 Log.d(TAG, "Response Received: ${response.body().toString()}")
-                var token: Token? = response.body()
-                //credentials.bearer = "Bearer " + token?.access_token
+                val token: Token? = response.body()
                 responseLiveData.value = "Bearer " + token?.access_token
             }
 
@@ -50,6 +52,9 @@ class CoinFetcher {
         return responseLiveData
     }
 
+    /*
+    Get Asset List, containing <assetID>, <name>, <symbol> for all available coins
+     */
     fun getAssetList(func: () -> Unit): LiveData<AssetList> {
         val responseLiveData: MutableLiveData<AssetList> = MutableLiveData()
         val request: Call<AssetList> = braveNewCoinApi.getAssetList(key = credentials.apiKey)
@@ -67,14 +72,18 @@ class CoinFetcher {
         return responseLiveData
     }
 
+    /*
+    Get detailed info on a specific coin
+    requires Bearer Token from getToken()
+     */
     fun getCoin(asset: Asset, bearer: String, func: (input: CoinEntity) -> Unit){
         val request: Call<CoinList> = braveNewCoinApi.getCoin(key = credentials.apiKey, authorization = bearer, assetId = asset.id)
         request.enqueue(object: Callback<CoinList> {
             override fun onResponse(call: Call<CoinList>, response: Response<CoinList>) {
                 Log.d(TAG, "Response Received: ${response.body().toString()}")
-                var coin: Coin? = response.body()?.content?.get(0)
+                val coin: Coin? = response.body()?.content?.get(0)
                 if (coin != null){
-                    var coinEntity: CoinEntity = CoinEntity(
+                    val coinEntity = CoinEntity(
                         assetId = coin.assetId,
                         name = asset.name,
                         timestamp = coin.timestamp,

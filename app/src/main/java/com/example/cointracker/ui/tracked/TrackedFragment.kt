@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,11 +18,12 @@ import com.example.cointracker.R
 import com.example.cointracker.databinding.FragmentTrackedBinding
 import com.example.cointracker.db.CoinDatabase
 import com.example.cointracker.db.CoinEntity
-import kotlin.math.round
-import com.example.cointracker.ui.list.ListFragment
 
 private lateinit var coinViewModel: CoinViewModel
 
+/*
+Class for displaying tracked coin list
+ */
 class TrackedFragment : Fragment() {
 
     private var _binding: FragmentTrackedBinding? = null
@@ -38,6 +37,8 @@ class TrackedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        // get dao and viewmodel
         val application = requireActivity().application
         val dao = CoinDatabase.getInstance(application).coinDao
         val viewModelFactory = CoinViewModelFactory(dao)
@@ -45,6 +46,8 @@ class TrackedFragment : Fragment() {
 
         _binding = FragmentTrackedBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        // create recycler view
         val recyclerView = binding.trackedRecyclerView
         val adapter = CoinAdapter(
             coinViewModel.coinListLiveData.value ?: emptyList<CoinEntity>()
@@ -52,6 +55,8 @@ class TrackedFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
+        // observe tracked coins
+        // sort by market cap rank instead of alphabetically
         coinViewModel.trackedListLiveData.observe(viewLifecycleOwner, Observer {
             adapter.updateAssetList(it.sortedBy { coin -> coin.marketCapRank })
         })
@@ -64,12 +69,11 @@ class TrackedFragment : Fragment() {
         _binding = null
     }
 
+    // Adapter for recycler view
     class CoinAdapter(var coinList: List<CoinEntity>): RecyclerView.Adapter<CoinAdapter.ViewHolder>() {
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val symbol = itemView.findViewById<TextView>(R.id.symbol)
             val name = itemView.findViewById<TextView>(R.id.name)
-
-            //val track = itemView.findViewById<Button>(R.id.trackButton)
             val rank = itemView.findViewById<TextView>(R.id.rank)
             val price = itemView.findViewById<TextView>(R.id.price)
         }
@@ -91,6 +95,7 @@ class TrackedFragment : Fragment() {
             holder.rank.setText(entity.marketCapRank.toString())
             holder.price.setText("$%.2f".format(entity.price))
 
+            // display detailed information in Alert Dialog
             holder.itemView.setOnClickListener {
                 AlertDialog.Builder(holder.itemView.context)
                     .setTitle(entity.name)

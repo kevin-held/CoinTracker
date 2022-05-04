@@ -4,6 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/*
+Coin Entity representing all possible columns in coin database
+ */
 @Entity(tableName="coin_table")
 data class CoinEntity(
     @PrimaryKey

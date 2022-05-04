@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/drawable/img_btn_src.xml" value="0.219" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/activity_main.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/app_bar_main.xml" value="0.1609375" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/asset_item.xml" value="0.1609375" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/coin_item.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/content_main.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/fragment_home.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/fragment_list.xml" value="0.3304812834224599" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/fragment_slideshow.xml" value="0.1609375" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/fragment_tracked.xml" value="0.1609375" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/img_btn_src.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/layout/nav_header_main.xml" value="0.1609375" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/menu/activity_main_drawer.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/kwsax/AndroidStudioProjects/CoinTracker/app/src/main/res/menu/main.xml" value="0.21197916666666666" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

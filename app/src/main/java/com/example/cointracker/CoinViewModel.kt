@@ -35,7 +35,15 @@ class CoinViewModel(val dao: CoinDao): ViewModel() {
             dao.trackCoin(name)
             getCoin(asset)
         }
+    }
 
+    /*
+    update coin data
+     */
+    fun updateCoin(asset: Asset){
+        viewModelScope.launch {
+            getCoin(asset)
+        }
     }
 
     /*

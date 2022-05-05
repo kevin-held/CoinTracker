@@ -40,11 +40,12 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        // create the dao and viewmodel
+
+        // get the viewmodel
         val application = requireActivity().application
         val dao = CoinDatabase.getInstance(application).coinDao
         val viewModelFactory = CoinViewModelFactory(dao)
-        coinViewModel = ViewModelProvider(this, viewModelFactory).get(CoinViewModel::class.java)
+        coinViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(CoinViewModel::class.java)
 
         _binding = FragmentListBinding.inflate(inflater, container, false)
         val root: View = binding.root

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.example.cointracker.R
 import com.example.cointracker.databinding.FragmentTrackedBinding
 import com.example.cointracker.db.CoinDatabase
 import com.example.cointracker.db.CoinEntity
+import com.example.cointracker.model.Asset
 
 private lateinit var coinViewModel: CoinViewModel
 
@@ -38,11 +40,11 @@ class TrackedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        // get dao and viewmodel
+        // get the viewmodel
         val application = requireActivity().application
         val dao = CoinDatabase.getInstance(application).coinDao
         val viewModelFactory = CoinViewModelFactory(dao)
-        coinViewModel = ViewModelProvider(this, viewModelFactory).get(CoinViewModel::class.java)
+        coinViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(CoinViewModel::class.java)
 
         _binding = FragmentTrackedBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -90,6 +92,11 @@ class TrackedFragment : Fragment() {
 
         override fun onBindViewHolder(holder: CoinAdapter.ViewHolder, position: Int) {
             val entity: CoinEntity = coinList.get(position)
+            /*
+            if(entity.needsUpdate()){
+                val asset = Asset(id = entity.assetId, name = entity.name, symbol = entity.symbol)
+                coinViewModel.updateCoin(asset) // get updated info
+            }*/
             holder.symbol.setText(entity.symbol)
             holder.name.setText(entity.name)
             holder.rank.setText(entity.marketCapRank.toString())
